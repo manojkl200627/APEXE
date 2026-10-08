@@ -4,11 +4,16 @@ import time
 import threading
 import uvicorn
 import requests
+from pydantic import BaseModel
 app = FastAPI(title="Apex-Edge Worker")
 
 MASTER_IP = ""
 MASTER_PORT = 8000
 
+class WorkloadRequest(BaseModel):
+    source_node: str
+    workload_id: str
+    data: str
 
 worker_status = {
     "node": "sandeep-victus",
@@ -113,7 +118,23 @@ def send_telemetry():
 
 
 
+@app.post("/offload")
+def receive_offload(data: WorkloadRequest):
 
+    print(
+        f"[OFFLOAD] Received {data.workload_id} "
+        f"from {data.source_node}"
+    )
+
+    print(
+        f"[OFFLOAD] Processing: {data.data}"
+    )
+
+    return {
+        "status": "processed",
+        "worker": worker_status["node"],
+        "workload_id": data.workload_id
+    }
 
 
 
