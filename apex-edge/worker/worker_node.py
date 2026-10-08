@@ -130,10 +130,19 @@ def receive_offload(data: WorkloadRequest):
         f"[OFFLOAD] Processing: {data.data}"
     )
 
-    return {
-        "status": "processed",
+    result = {
+        "message": f"Processed {data.data}",
         "worker": worker_status["node"],
         "workload_id": data.workload_id
+    }
+
+    print(
+        f"[OFFLOAD] Completed {data.workload_id}"
+    )
+
+    return {
+        "status": "completed",
+        "result": result
     }
 
 
